@@ -1,14 +1,17 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route } from "react-router-dom";
+import Home from "./components/Home";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <h1>hello, Simple CRUD</h1>
-  )
+    // this is just a placeholder fo the hight
+    <main className="bg-[#f3f4f6] h-[100vh]">
+      <div className="container mx-auto overflow-x-auto py-[27px]">
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </div>
+    </main>
+  );
 }
 
-export default App
+export default App;
