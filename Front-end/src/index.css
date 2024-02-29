@@ -1,3 +1,65 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --sheet-bg-color: rgba(0, 0, 0, 0.4);
+}
+
+@keyframes open-sheet {
+  from {
+    background-color: rgb(256, 256, 256, 0);
+    z-index: 10;
+  }
+  to {
+    background-color: var(--sheet-bg-color);
+    z-index: 10;
+  }
+}
+@keyframes close-sheet {
+  from {
+    background-color: var(--sheet-bg-color);
+    z-index: 10;
+  }
+  to {
+    background-color: rgb(256, 256, 256, 0);
+    z-index: -10;
+  }
+}
+
+.open-sheet {
+  animation: 350ms ease-in-out forwards running open-sheet;
+  -webkit-animation: 350ms ease-in-out forwards running open-sheet;
+}
+.close-sheet {
+  animation: 300ms ease-in-out forwards running close-sheet;
+  -webkit-animation: 300ms ease-in-out forwards running close-sheet;
+}
+
+/* ======= Sheet Form Animations ======= */
+@keyframes open-sheet-form {
+  from {
+    left: -100%;
+  }
+  to {
+    left: 0%;
+  }
+}
+
+@keyframes close-sheet-form {
+  from {
+    left: 0%;
+  }
+  to {
+    left: -100%;
+  }
+}
+.open-sheet-form {
+  animation: 300ms ease-in-out forwards running open-sheet-form;
+  -webkit-animation: 300ms ease-in-out forwards running open-sheet-form;
+}
+
+.close-sheet-form {
+  animation: 300ms ease-in-out forwards running close-sheet-form;
+  -webkit-animation: 300ms ease-in-out forwards running close-sheet-form;
+}

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import UpdateButton from "./UpdateButton";
 
 const Row = ({ user }) => {
   return (
@@ -27,15 +27,13 @@ const Row = ({ user }) => {
         {user.status}
       </td>
       <td className="p-[9px] pl-[0px] text-[14px] text-[#0c193b] font-semibold">
-        <button className="py-2.5 px-5 rounded-lg font-medium bg-teal-200 text-teal-800">
-          Update
-        </button>
+        <UpdateButton userID={user.id} />
       </td>
-      <td className="p-[9px] pl-[0px] text-[14px] text-[#0c193b] font-semibold">
+      {/* <td className="p-[9px] pl-[0px] text-[14px] text-[#0c193b] font-semibold">
         <button className="py-2.5 px-6 rounded-lg font-medium bg-red-200 text-red-800">
           Delete
         </button>
-      </td>
+      </td> */}
     </tr>
   );
 };

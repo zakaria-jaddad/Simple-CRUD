@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import { Users } from "../api/users";
 import Row from "../ui/Row";
 
+/*
+  i want when the user press the update buttons
+    - they get a sheet like to update values of the user
+*/
+
 const Home = () => {
   const [users, setUsers] = useState([]);
 
@@ -13,7 +18,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="bg-white w-full p-[27px] rounded-lg">
+    <div className="bg-white w-[1024px] p-[27px] rounded-lg">
       <table className="w-full ">
         <thead className="border-b border-neutral-100">
           <tr>
@@ -35,12 +40,13 @@ const Home = () => {
             <th className="text-[#9ba7b5] min-w-[100px] text-start pb-[9px] text-[13px] font-bold">
               STATUS
             </th>
+
             <th className="text-[#9ba7b5] min-w-[120px] text-start pb-[9px] text-[13px] font-bold ">
               UPDATE
             </th>
-            <th className="text-[#9ba7b5] min-w-[120px] text-start pb-[9px] text-[13px] font-bold ">
+            {/* <th className="text-[#9ba7b5] min-w-[120px] text-start pb-[9px] text-[13px] font-bold">
               DELETE
-            </th>
+            </th> */}
           </tr>
         </thead>
         <tbody className="last:[&_tr]:border-none [&_tr]:border-b [&_tr]:border-neutral-100">
