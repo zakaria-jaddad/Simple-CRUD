@@ -7,12 +7,25 @@ export const Users = {
 
       const data = await res.json();
       return data;
-
-    }
-    // if error in fetching data
-    catch (error) {
-      throw new Error("Network Erro, Unable To get data from server.");
+    } catch (error) {
+      // if error in fetching data
+      throw new Error("Network Erro, Unable To users data from server.");
     }
   },
-  getUser: (userID) => {},
+  // get user data from the givne user name
+  fetchByID: async (userID) => {
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/users/${userID}`);
+      if (!res) throw new Error("Network Error!!");
+      const userData = await res.json();
+      return userData;
+    } catch (error) {
+      throw new Error("Network Erro, Unable To get user data from server.");
+    } 
+  },
+  updateUserData: (userID) => {
+
+    console.log(userID);
+
+  }
 };
