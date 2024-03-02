@@ -6,7 +6,7 @@ import SheetForm from "../ui/SheetForm";
 
 const Home = () => {
   const [users, setUsers] = useState([]);
-  const { isSheetOpen, userData } = useSelector((state) => state.sheet);
+  const { isSheetOpen } = useSelector((state) => state.sheet);
 
   useEffect(() => {
     if (isSheetOpen !== true || users.length === 0) {
@@ -56,7 +56,7 @@ const Home = () => {
         </tbody>
       </table>
       {isSheetOpen === true ? (
-        <SheetForm isSheetOpen={isSheetOpen} userData={userData} />
+        <SheetForm />
       ) : null}
     </div>
   );

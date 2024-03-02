@@ -20,8 +20,14 @@ class UserController extends Controller
 
         return response()->json($user);
     }
+    public function update_user(Request $request)
+    {
+        $hello = $request->json();
 
-    
+        return $hello->all();
+    }
+
+
 
 
 }
