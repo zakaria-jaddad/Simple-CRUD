@@ -1,11 +1,12 @@
 import { useDispatch } from "react-redux";
-import { closeSheet } from "../app/slices/sheetSlice";
 import { useState } from "react";
-import { Users } from "../api/users";
+import { Users } from "../../api/users";
+import closeSheetForm from "./utils/closeSheetForm";
+import "./styles/sheet.css"
 
 const SheetForm = ({ isSheetOpen, userData }) => {
   const dispatch = useDispatch();
-  const [sexActive, setSexeActive] = useState(userData.sex.toLowerCase());
+  const [sexeActive, setSexeActive] = useState(userData.sex.toLowerCase());
   /* 
    {
       id: 1,
@@ -30,6 +31,7 @@ const SheetForm = ({ isSheetOpen, userData }) => {
             }`}
     >
       <div
+        id="sheetForm"
         className={`absolute top-0 left-[-100%] bg-[#f3f4f6] h-full lg:w-[385px] md:w-[385px] sm:w-[385px] w-[80%] p-[24px]
         ${
           isSheetOpen !== undefined
@@ -47,7 +49,7 @@ const SheetForm = ({ isSheetOpen, userData }) => {
             className="w-[20px] h-[20px] cursor-pointer flex items-center justify-center translate-x-[50%] translate-y-[-100%]"
             title="cancel update"
             onClick={() => {
-              dispatch(closeSheet());
+              closeSheetForm(dispatch);
             }}
           >
             <svg
@@ -121,10 +123,8 @@ const SheetForm = ({ isSheetOpen, userData }) => {
               <select
                 id={userData.status}
                 className="appearance-none w-full h-full border border-[#a1a1aa] rounded bg-transparent px-[10px] active:outline-[black] focus:outline-[black] text-sm"
+                defaultValue={userData.status}
               >
-                <option disabled selected value={userData.status}>
-                  {userData.status}
-                </option>
                 <option value="married">Married</option>
                 <option value="Single">Single</option>
               </select>
@@ -136,9 +136,9 @@ const SheetForm = ({ isSheetOpen, userData }) => {
               onClick={() => {
                 setSexeActive("male");
               }}
-              className={`w-[75px] h-[75px] flex justify-center items-center rounded-md border border-teal-200 flex-col gap-1 bg-teal-200 text-teal-800 fill-teal-800 p-2 cursor-pointer  
+              className={`w-[70px] h-[70px] flex justify-center items-center rounded-md border border-teal-200 flex-col gap-1 bg-teal-200 text-teal-800 fill-teal-800 p-2 cursor-pointer  
                         ${
-                          sexActive === "male"
+                          sexeActive === "male"
                             ? " outline outline-teal-800"
                             : ""
                         }`}
@@ -160,9 +160,9 @@ const SheetForm = ({ isSheetOpen, userData }) => {
               onClick={() => {
                 setSexeActive("female");
               }}
-              className={`w-[75px] h-[75px] flex justify-center items-center rounded-md border border-pink-200 flex-col gap-1 bg-pink-200 text-pink-800 fill-pink-800 p-2 cursor-pointer 
+              className={`w-[70px] h-[70px] flex justify-center items-center rounded-md border border-pink-200 flex-col gap-1 bg-pink-200 text-pink-800 fill-pink-800 p-2 cursor-pointer 
                         ${
-                          sexActive === "female"
+                          sexeActive === "female"
                             ? "outline outline-pink-800"
                             : ""
                         }`}
@@ -183,11 +183,11 @@ const SheetForm = ({ isSheetOpen, userData }) => {
           <div className="w-full flex justify-end">
             <button
               onClick={(e) => {
-                e.preventDefault()
-                Users.updateUserData(userData.id)
+                e.preventDefault();
+                Users.updateUserData(userData.id);
                 dispatch(closeSheet());
               }}
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 shadowh-9 px-4 py-2 bg-black text-white"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 shadowh-9 px-4 py-2 bg-black text-white"
               type="submit"
             >
               Save changes

@@ -9,7 +9,7 @@ export const Users = {
       return data;
     } catch (error) {
       // if error in fetching data
-      throw new Error("Network Erro, Unable To users data from server.");
+      throw new Error("Network Error, Unable get users data from server.");
     }
   },
   // get user data from the givne user name
@@ -21,11 +21,6 @@ export const Users = {
       return userData;
     } catch (error) {
       throw new Error("Network Erro, Unable To get user data from server.");
-    } 
+    }
   },
-  updateUserData: (userID) => {
-
-    console.log(userID);
-
-  }
 };

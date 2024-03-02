@@ -1,30 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Users } from "../api/users";
 import { useSelector } from "react-redux";
 import Row from "../ui/Row";
 import SheetForm from "../ui/SheetForm";
-
-/*
-  i want when the user press the update buttons
-    - they get a sheet like to update values of the user
-*/
 
 const Home = () => {
   const [users, setUsers] = useState([]);
   const { isSheetOpen, userData } = useSelector((state) => state.sheet);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setUsers(await Users.getAllUsers());
-    };
-    fetchData();
-  }, []);
-
-  const sheet = useMemo(() => {
-    return isSheetOpen === true ? (
-      <SheetForm isSheetOpen={isSheetOpen} userData={userData} />
-    ) : null;
-  }, [isSheetOpen, userData]);
+    if (isSheetOpen !== true || users.length === 0) {
+      const fetchData = async () => {
+        setUsers(await Users.getAllUsers());
+      };
+      fetchData();
+    }
+  }, [isSheetOpen]);
 
   return (
     <div className="bg-white w-[1024px] p-[27px] rounded-lg">
@@ -64,7 +55,9 @@ const Home = () => {
           ))}
         </tbody>
       </table>
-      {sheet}
+      {isSheetOpen === true ? (
+        <SheetForm isSheetOpen={isSheetOpen} userData={userData} />
+      ) : null}
     </div>
   );
 };
