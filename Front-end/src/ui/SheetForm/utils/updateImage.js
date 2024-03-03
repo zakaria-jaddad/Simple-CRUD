@@ -5,14 +5,16 @@
 
   Porpuse
     - update the image localye by changing the src 
-    - returns new image url
+    - returns new image form data
 */
 export default function updateImage(e, imageID) {
   const profileImage = document.querySelector(`#${imageID}`);
 
-  const newImageSrc = window.URL.createObjectURL(e.target.files[0]);
+  // server side image change
+  const newProfileImage = e.target.files[0];
 
+  const newImageSrc = window.URL.createObjectURL(newProfileImage);
   profileImage.src = newImageSrc;
 
-  return newImageSrc;
+  return newProfileImage;
 }

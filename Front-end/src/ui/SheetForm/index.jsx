@@ -10,22 +10,49 @@ const SheetForm = () => {
   const { isSheetOpen, userData } = useSelector((state) => state.sheet);
   const [newUserData, setNewUserData] = useState(userData);
 
-  const validateAge = (e) => {
-    if (
-      (parseInt(e.target.value) < 100 && parseInt(e.target.value) > 0) ||
-      e.target.value === ""
-    ) {
-      setNewUserData({
-        ...newUserData,
-        age:
-          Number.isNaN(parseInt(e.target.value)) === true
-            ? 0
-            : parseInt(e.target.value),
-      });
-      e.target.classList.remove("focus:outline-red-500");
-    } else {
-      e.target.classList.add("focus:outline-red-500");
+  /* 
+    - output: returns if the age is valid or not 
+  */
+  const validateAge = (age) => {
+    if ((parseInt(age) <= 100 && parseInt(age) > 0) || age === "") {
+      return true;
     }
+    // if age is not valid
+    else {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    console.log(newUserData);
+  }, [newUserData]);
+
+  const handelValueChange = ({ eventName, eventValue }) => {
+    setNewUserData({
+      ...newUserData,
+      [eventName]:
+        eventName === "age"
+          ? Number.isNaN(parseInt(eventValue)) === true
+            ? 0
+            : parseInt(eventValue)
+          : eventValue,
+    });
+  };
+
+  const handelSubmitForm = () => {
+    const formData = new FormData();
+
+    const profileImageInput = document.getElementById("profile-image-input");
+
+    console.log("submiting", profileImageInput.files[0]);
+    formData.append("image", profileImageInput.files[0]);
+    formData.append("name", "Zakaria");
+
+    Users.updateUserDataByID({
+      userID: newUserData.id,
+      newUserData: formData,
+    });
+    closeSheetForm(dispatch);
   };
 
   return (
@@ -78,14 +105,15 @@ const SheetForm = () => {
               <input
                 id="profile-image-input"
                 type="file"
+                name="image_path"
                 accept="image/*"
                 hidden
-                onChange={(e) => {
-                  setNewUserData({
-                    ...newUserData,
-                    image_path: updateImage(e, "profile-image"),
-                  });
-                }}
+                onChange={(e) =>
+                  handelValueChange({
+                    eventName: e.target.name,
+                    eventValue: updateImage(e, "profile-image"),
+                  })
+                }
               />
             </label>
             {/* close button */}
@@ -121,16 +149,17 @@ const SheetForm = () => {
             </label>
             <div className="w-[230px] h-full">
               <input
-                id={newUserData.first_name}
                 className="w-full h-full border border-[#a1a1aa] rounded bg-transparent px-[10px] active:outline-[black] focus:outline-[black] text-sm"
-                value={newUserData.first_name}
+                id={newUserData.first_name}
+                name="first_name"
                 type="text"
-                onChange={(e) => {
-                  setNewUserData({
-                    ...newUserData,
-                    first_name: e.target.value,
-                  });
-                }}
+                value={newUserData.first_name}
+                onChange={(e) =>
+                  handelValueChange({
+                    eventName: e.target.name,
+                    eventValue: e.target.value,
+                  })
+                }
               />
             </div>
           </div>
@@ -143,16 +172,17 @@ const SheetForm = () => {
             </label>
             <div className="w-[230px] h-full">
               <input
-                id={newUserData.last_name}
                 className="w-full h-full border border-[#a1a1aa] rounded bg-transparent px-[10px] active:outline-[black] focus:outline-[black] text-sm"
+                id={newUserData.last_name}
+                name="last_name"
                 value={newUserData.last_name}
                 type="text"
-                onChange={(e) => {
-                  setNewUserData({
-                    ...newUserData,
-                    last_name: e.target.value,
-                  });
-                }}
+                onChange={(e) =>
+                  handelValueChange({
+                    eventName: e.target.name,
+                    eventValue: e.target.value,
+                  })
+                }
               />
             </div>
           </div>
@@ -162,17 +192,28 @@ const SheetForm = () => {
             </label>
             <div className="w-[230px] h-full">
               <input
-                id={newUserData.age}
                 className=" [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
                   w-full h-full border border-[#a1a1aa] rounded bg-transparent px-[10px] active:outline-[black] focus:outline-[black] text-sm"
+                id={newUserData.age}
+                name="age"
+                type="number"
                 value={
                   parseInt(newUserData.age) === 0
                     ? ""
                     : parseInt(newUserData.age)
                 }
-                type="number"
                 onChange={(e) => {
-                  validateAge(e);
+                  if (validateAge(e.target.value) === true) {
+                    handelValueChange({
+                      eventName: e.target.name,
+                      eventValue: e.target.value,
+                    });
+                    e.target.classList.remove("focus:outline-red-500");
+                  }
+                  // age is not valid
+                  else {
+                    e.target.classList.add("focus:outline-red-500");
+                  }
                 }}
               />
             </div>
@@ -183,15 +224,16 @@ const SheetForm = () => {
             </label>
             <div className="w-[230px] h-full">
               <select
-                id={userData.status}
                 className="appearance-none w-full h-full border border-[#a1a1aa] rounded bg-transparent px-[10px] active:outline-[black] focus:outline-[black] text-sm"
+                id={userData.status}
+                name="status"
                 defaultValue={userData.status}
-                onChange={(e) => {
-                  setNewUserData({
-                    ...newUserData,
-                    status: e.target.value,
-                  });
-                }}
+                onChange={(e) =>
+                  handelValueChange({
+                    eventName: e.target.name,
+                    eventValue: e.target.value,
+                  })
+                }
               >
                 <option value="Married">Married</option>
                 <option value="Single">Single</option>
@@ -202,10 +244,7 @@ const SheetForm = () => {
           <div className="flex gap-2 cursor-pointer w-full justify-end">
             <div
               onClick={() => {
-                setNewUserData({
-                  ...newUserData,
-                  sex: "Male",
-                });
+                handelValueChange({ eventName: "sex", eventValue: "Male" });
               }}
               className={`w-[70px] h-[70px] flex justify-center items-center rounded-md border border-teal-200 flex-col gap-1 bg-teal-200 text-teal-800 fill-teal-800 p-2 cursor-pointer  
                         ${
@@ -229,10 +268,7 @@ const SheetForm = () => {
 
             <div
               onClick={() => {
-                setNewUserData({
-                  ...newUserData,
-                  sex: "Female",
-                });
+                handelValueChange({ eventName: "sex", eventValue: "Female" });
               }}
               className={`w-[70px] h-[70px] flex justify-center items-center rounded-md border border-pink-200 flex-col gap-1 bg-pink-200 text-pink-800 fill-pink-800 p-2 cursor-pointer 
                         ${
@@ -258,11 +294,7 @@ const SheetForm = () => {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                Users.updateUserDataByID({
-                  userID: userData.id,
-                  newUserData: newUserData,
-                });
-                closeSheetForm(dispatch);
+                handelSubmitForm();
               }}
               className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 shadowh-9 px-4 py-2 bg-black text-white"
               type="submit"

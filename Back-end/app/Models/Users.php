@@ -12,7 +12,7 @@ class Users extends Model
 
     protected $fillable = [
         'first_name',
-        'lase_name',
+        'last_name',
         'status',
         'sex',
         'age',

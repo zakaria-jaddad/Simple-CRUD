@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Users;
 use Illuminate\Http\Request;
 use League\Flysystem\UrlGeneration\PublicUrlGenerator;
+use Storage;
+
+// use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -20,11 +23,17 @@ class UserController extends Controller
 
         return response()->json($user);
     }
-    public function update_user(Request $request)
+    public function edit_user(Request $request)
     {
-        $hello = $request->json();
 
-        return $hello->all();
+        $image = $request->file('image');
+
+
+        $image_path = $request->file('image')->store('local');
+
+
+        return var_dump($image_path);
+
     }
 
 

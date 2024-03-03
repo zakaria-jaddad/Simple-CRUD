@@ -14,6 +14,7 @@ const Home = () => {
         setUsers(await Users.getAllUsers());
       };
       fetchData();
+      console.log("data, has been fetch!");
     }
   }, [isSheetOpen]);
 
@@ -55,9 +56,7 @@ const Home = () => {
           ))}
         </tbody>
       </table>
-      {isSheetOpen === true ? (
-        <SheetForm />
-      ) : null}
+      {isSheetOpen === true ? <SheetForm /> : null}
     </div>
   );
 };

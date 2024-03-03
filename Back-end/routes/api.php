@@ -20,5 +20,5 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('users', [UserController::class, 'index']);
 Route::get('users/{id}', [UserController::class, 'show_user']);
-Route::post('users/{id}', [UserController::class, 'update_user']);
+Route::post('users/{id}', [UserController::class, 'edit_user']);
 
