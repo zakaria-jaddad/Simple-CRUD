@@ -29,10 +29,13 @@ class UserController extends Controller
         $image = $request->file('image');
 
 
-        $image_path = $request->file('image')->store('local');
+        $image_path = $request->file('image')->store('public');
+
+        // TODO: store the relative path of the profile image in the DB.
+        $url = Storage::url($image_path);
 
 
-        return var_dump($image_path);
+        return json_encode(asset($url));
 
     }
 
