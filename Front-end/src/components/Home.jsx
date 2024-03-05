@@ -14,7 +14,6 @@ const Home = () => {
         setUsers(await Users.getAllUsers());
       };
       fetchData();
-      console.log("data, has been fetch!");
     }
   }, [isSheetOpen]);
 
