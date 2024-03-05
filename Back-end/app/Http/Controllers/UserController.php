@@ -48,6 +48,9 @@ class UserController extends Controller
         $user = Users::find($request->id);
         // store new updated profile image
         if ($image !== null) {
+            $validate = $request->validate([
+                'image' => 'mimes:jpeg,png,jpg,gif'
+            ]);
             $image_path = $request->file('public')->store($image);
             $user->update(['image_path' => asset(Storage::url($image_path))]);
         }
@@ -62,7 +65,7 @@ class UserController extends Controller
 
 
 
-        return json_encode(["200" => gettype($age)]);
+        return json_encode(["200" => 'User Got Updated Successfully']);
 
     }
 
