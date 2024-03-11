@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use League\Flysystem\UrlGeneration\PublicUrlGenerator;
 use Mockery\Undefined;
 use Storage;
+use Symfony\Component\HttpFoundation\RateLimiter\RequestRateLimiterInterface;
 
 // use Illuminate\Support\Facades\Storage;
 
@@ -35,7 +36,6 @@ class UserController extends Controller
         $sexe = $request->input('sexe');
         $image = $request->file('image');
 
-
         //  data validation 
         $validate = $request->validate([
             'firstName' => 'required|max:255',
@@ -51,7 +51,7 @@ class UserController extends Controller
             $validate = $request->validate([
                 'image' => 'mimes:jpeg,png,jpg,gif'
             ]);
-            $image_path = $request->file('public')->store($image);
+            $image_path = $image->store("public");
             $user->update(['image_path' => asset(Storage::url($image_path))]);
         }
 
@@ -65,10 +65,13 @@ class UserController extends Controller
 
 
 
-        return json_encode(["200" => 'User Got Updated Successfully']);
+        // return json_encode(["200" => 'User Got Updated Successfully']);
 
     }
-
+    public function create_user(Request $request)
+    {
+        return json_encode(['200' => "Hello, World!!"]);
+    }
 
 
 

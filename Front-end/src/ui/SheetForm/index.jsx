@@ -1,18 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import { Users } from "../../api/users";
 import closeSheetForm from "./utils/closeSheetForm";
 import useSheetForm from "./hooks/useSheetForm";
 import { updateImage, validateAge } from "./utils/validateSheetForm";
 import "./styles/sheet.css";
-import { useEffect } from "react";
 
 const SheetForm = () => {
   const dispatch = useDispatch();
-  const [isSheetOpen, [newUserData, setNewUserData]] = useSheetForm(
-    useSelector((state) => state.sheet)
-  );
+  const {userData} = useSelector((state) => state.sheet);
+  const [isSheetOpen, [newUserData, setNewUserData]] = useSheetForm(useSelector((state) => state.sheet));
 
   const handelValueChange = ({ eventName, eventValue }) => {
+    console.log(eventValue);
     setNewUserData({
       ...newUserData,
       [eventName]:
@@ -25,11 +25,10 @@ const SheetForm = () => {
   };
 
   const handelSubmitForm = () => {
-    const profileImageInput = document.getElementById("profile-image-input");
 
     // set data
     const formData = new FormData();
-    formData.append("image", profileImageInput.files[0]);
+    formData.append("image", newUserData.image_path);
     formData.append("firstName", newUserData.first_name);
     formData.append("lastName", newUserData.last_name);
     formData.append("age", newUserData.age);
@@ -40,6 +39,7 @@ const SheetForm = () => {
       userID: newUserData.id,
       newUserData: formData,
     });
+    // TODO : THE SHEET FORM SHOULD BE CLOSED UNTIL CLIENT GET THE RESPONSE.
     closeSheetForm(dispatch);
   };
 
@@ -86,7 +86,7 @@ const SheetForm = () => {
               <img
                 id="profile-image"
                 className="w-[100px] h-[100px] rounded cursor-pointer hover:rounded-md"
-                src={newUserData.image_path}
+                src={userData.image_path}
                 alt={`${newUserData.first_name}'s Profile Image`}
                 title={`${newUserData.first_name}'s Profile Image`}
               />
@@ -96,7 +96,12 @@ const SheetForm = () => {
                 name="image_path"
                 accept="image/*"
                 hidden
-                onChange={(e) => updateImage(e, "profile-image")}
+                onChange={(e) =>
+                  handelValueChange({
+                    eventName: "image_path",
+                    eventValue: updateImage(e, "profile-image"),
+                  })
+                }
               />
             </label>
             {/* close button */}
