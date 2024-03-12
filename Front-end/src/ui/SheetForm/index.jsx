@@ -1,18 +1,22 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { updateImage, validateAge } from "./utils/validateSheetForm";
 import { Users } from "../../api/users";
 import closeSheetForm from "./utils/closeSheetForm";
 import useSheetForm from "./hooks/useSheetForm";
-import { updateImage, validateAge } from "./utils/validateSheetForm";
+import ImageCropper from "./components/ImageCropper";
+import useImageCropper from "./hooks/useImageCropper";
 import "./styles/sheet.css";
 
 const SheetForm = () => {
   const dispatch = useDispatch();
-  const {userData} = useSelector((state) => state.sheet);
-  const [isSheetOpen, [newUserData, setNewUserData]] = useSheetForm(useSelector((state) => state.sheet));
+  const { userData } = useSelector((state) => state.sheet);
+  const [isSheetOpen, [newUserData, setNewUserData]] = useSheetForm(
+    useSelector((state) => state.sheet)
+  );
+  const { isImageCropperOpend, openImageCropper, closeImageCropper } =
+    useImageCropper();
 
   const handelValueChange = ({ eventName, eventValue }) => {
-    console.log(eventValue);
     setNewUserData({
       ...newUserData,
       [eventName]:
@@ -25,7 +29,6 @@ const SheetForm = () => {
   };
 
   const handelSubmitForm = () => {
-
     // set data
     const formData = new FormData();
     formData.append("image", newUserData.image_path);
@@ -34,7 +37,6 @@ const SheetForm = () => {
     formData.append("age", newUserData.age);
     formData.append("status", newUserData.status);
     formData.append("sexe", newUserData.sex);
-
     Users.updateUserDataByID({
       userID: newUserData.id,
       newUserData: formData,
@@ -45,7 +47,7 @@ const SheetForm = () => {
 
   return (
     <div
-      className={`h-full w-full absolute top-0 left-0 -z-10 bg-[rgb(256,_256,_256,_0)]
+      className={`h-full w-full absolute top-0 left-0 -z-30 bg-[rgb(256,_256,_256,_0)]
             ${
               isSheetOpen !== undefined
                 ? isSheetOpen === true
@@ -56,7 +58,7 @@ const SheetForm = () => {
     >
       <div
         id="sheetForm"
-        className={`absolute top-0 left-[-100%] bg-[#f3f4f6] h-full lg:w-[385px] md:w-[385px] sm:w-[385px] w-[80%] p-[24px]
+        className={`absolute top-0 left-[-100%] bg-[#f3f4f6] h-full lg:w-[385px] md:w-[385px] sm:w-[385px] w-[80%] p-[24px] -z-20
         ${
           isSheetOpen !== undefined
             ? isSheetOpen === true
@@ -96,12 +98,18 @@ const SheetForm = () => {
                 name="image_path"
                 accept="image/*"
                 hidden
-                onChange={(e) =>
+                onChange={(e) => {
+                  const { newProfileImageBlob } = updateImage(
+                    e,
+                    "profile-image"
+                  );
                   handelValueChange({
-                    eventName: "image_path",
-                    eventValue: updateImage(e, "profile-image"),
-                  })
-                }
+                    eventName: e.target.name,
+                    eventValue: newProfileImageBlob,
+                  });
+
+                  openImageCropper();
+                }}
               />
             </label>
             {/* close button */}
@@ -301,6 +309,13 @@ const SheetForm = () => {
           </div>
         </div>
       </div>
+      {/* crop image */}
+      {isImageCropperOpend ? (
+        <ImageCropper
+          imageBlob={newUserData.image_path}
+          close={closeImageCropper}
+        />
+      ) : null}
     </div>
   );
 };
