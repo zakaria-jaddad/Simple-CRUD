@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { updateImage, validateAge } from "./utils/validateSheetForm";
+import { validateAge } from "./utils/validateSheetForm";
 import { Users } from "../../api/users";
+import { useState } from "react";
+import ImageFile from "./utils/image";
 import closeSheetForm from "./utils/closeSheetForm";
 import useSheetForm from "./hooks/useSheetForm";
 import ImageCropper from "./components/ImageCropper";
@@ -10,6 +12,7 @@ import "./styles/sheet.css";
 const SheetForm = () => {
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.sheet);
+  const [newProfileImageInfo, setNewProfileImageInfo] = useState({});
   const [isSheetOpen, [newUserData, setNewUserData]] = useSheetForm(
     useSelector((state) => state.sheet)
   );
@@ -99,15 +102,12 @@ const SheetForm = () => {
                 accept="image/*"
                 hidden
                 onChange={(e) => {
-                  const { newProfileImageBlob } = updateImage(
-                    e,
-                    "profile-image"
-                  );
+                  const newProfileImage = new ImageFile(e, "profile-image");
                   handelValueChange({
                     eventName: e.target.name,
-                    eventValue: newProfileImageBlob,
+                    eventValue: newProfileImage.getImageBlob,
                   });
-
+                  setNewProfileImageInfo(newProfileImage);
                   openImageCropper();
                 }}
               />
@@ -312,8 +312,8 @@ const SheetForm = () => {
       {/* crop image */}
       {isImageCropperOpend ? (
         <ImageCropper
-          imageBlob={newUserData.image_path}
           close={closeImageCropper}
+          newProfileImageInfo={newProfileImageInfo} 
         />
       ) : null}
     </div>

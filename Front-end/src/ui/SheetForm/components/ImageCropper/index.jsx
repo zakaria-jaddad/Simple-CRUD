@@ -1,6 +1,5 @@
 import Cropper from "cropperjs";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "../styles/cropper.css";
 
 const showCropper = () => {
@@ -8,9 +7,10 @@ const showCropper = () => {
   const cropper = new Cropper(image, {
     aspectRatio: 1,
   });
+  return cropper;
 };
 
-const ImageCropper = ({ imageBlob, close }) => {
+const useNewImage = (newProfileImageInfo) => {
   const [imageURL, setImageURL] = useState();
   useEffect(() => {
     const reader = new FileReader();
@@ -18,9 +18,14 @@ const ImageCropper = ({ imageBlob, close }) => {
       const imageURL = reader.result.toString() || "";
       setImageURL(imageURL);
     });
-    reader.readAsDataURL(imageBlob);
+    reader.readAsDataURL(newProfileImageInfo.getImageBlob());
   }, []);
+  return [imageURL, setImageURL];
+};
 
+const ImageCropper = ({ newProfileImageInfo, close }) => {
+  const [imageURL, setImageURL] = useNewImage(newProfileImageInfo);
+  const [imageCropper, setImageCropper] = useState({});
   return (
     <div className="w-full h-screen -z-10 open-sheet flex items-center justify-center">
       <div className="w-[500px] p-[20px] rounded-md bg-white flex flex-col justify-evenly max-h-screen gap-[20px]">
@@ -31,7 +36,7 @@ const ImageCropper = ({ imageBlob, close }) => {
             className="max-w-full rounded-[10px]"
             id="edit-profile-image"
             onLoad={() => {
-              showCropper();
+              setImageCropper(showCropper());
             }}
           />
         </div>
@@ -44,7 +49,17 @@ const ImageCropper = ({ imageBlob, close }) => {
           >
             Cancel
           </button>
-          <button className="py-2.5 px-6 rounded-lg font-medium bg-teal-200 text-teal-800">
+          <button
+            className="py-2.5 px-6 rounded-lg font-medium bg-teal-200 text-teal-800"
+            onClick={() => {
+              imageCropper.getCroppedCanvas().toBlob((blob) => {
+                newProfileImageInfo.setImageBlob(blob);
+                console.log(newProfileImageInfo.getImageBlob());
+                newProfileImageInfo.updateClientImage();
+                console.log("Hello");
+              });
+            }}
+          >
             Submit
           </button>
         </div>
