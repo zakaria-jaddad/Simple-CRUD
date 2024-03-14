@@ -8,6 +8,7 @@ use League\Flysystem\UrlGeneration\PublicUrlGenerator;
 use Mockery\Undefined;
 use Storage;
 use Symfony\Component\HttpFoundation\RateLimiter\RequestRateLimiterInterface;
+use Validator;
 
 // use Illuminate\Support\Facades\Storage;
 
@@ -37,20 +38,26 @@ class UserController extends Controller
         $image = $request->file('image');
 
         //  data validation 
-        $validate = $request->validate([
+        $user_data_validator = Validator::make($request->all(), [
             'firstName' => 'required|max:255',
             'lastName' => 'required|max:255',
             'age' => 'required|digits_between:1,100',
             'status' => 'required',
             'sexe' => 'required',
         ]);
+        if ($user_data_validator->fails()) {
+            return json_encode([400 => "Unable to process data"]);
+        }
 
         $user = Users::find($request->id);
         // store new updated profile image
         if ($image !== null) {
-            $validate = $request->validate([
+            $image_validator = Validator::make($request->all(), [
                 'image' => 'mimes:jpeg,png,jpg,gif'
             ]);
+            if ($image_validator->fails()) {
+                return json_encode([400 => "Unable to process image"]);
+            }
             $image_path = $image->store("public");
             $user->update(['image_path' => asset(Storage::url($image_path))]);
         }
@@ -62,10 +69,7 @@ class UserController extends Controller
             'status' => $status,
             'sex' => $sexe,
         ]);
-
-
-
-        // return json_encode(["200" => 'User Got Updated Successfully']);
+        return json_encode(["200" => 'User Got Updated Successfully']);
 
     }
     public function create_user(Request $request)
