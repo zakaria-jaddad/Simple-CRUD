@@ -103,10 +103,10 @@ const SheetForm = () => {
                 hidden
                 onChange={(e) => {
                   const newProfileImage = new ImageFile(e, "profile-image");
-                  handelValueChange({
-                    eventName: e.target.name,
-                    eventValue: newProfileImage.getImageBlob,
-                  });
+                  // handelValueChange({
+                  //   eventName: e.target.name,
+                  //   eventValue: newProfileImage.getImageBlob,
+                  // });
                   setNewProfileImageInfo(newProfileImage);
                   openImageCropper();
                 }}
@@ -313,7 +313,8 @@ const SheetForm = () => {
       {isImageCropperOpend ? (
         <ImageCropper
           close={closeImageCropper}
-          newProfileImageInfo={newProfileImageInfo} 
+          newProfileImageInfo={newProfileImageInfo}
+          handelValueChange={handelValueChange}
         />
       ) : null}
     </div>

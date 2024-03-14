@@ -1,29 +1,18 @@
+import { useState } from "react";
 import Cropper from "cropperjs";
-import { useEffect, useState } from "react";
+import useNewImage from "./hooks/useNewImage";
 import "../styles/cropper.css";
 
 const showCropper = () => {
   const image = document.getElementById("edit-profile-image");
   const cropper = new Cropper(image, {
     aspectRatio: 1,
+    viewMode: 1,
   });
   return cropper;
 };
 
-const useNewImage = (newProfileImageInfo) => {
-  const [imageURL, setImageURL] = useState();
-  useEffect(() => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      const imageURL = reader.result.toString() || "";
-      setImageURL(imageURL);
-    });
-    reader.readAsDataURL(newProfileImageInfo.getImageBlob());
-  }, []);
-  return [imageURL, setImageURL];
-};
-
-const ImageCropper = ({ newProfileImageInfo, close }) => {
+const ImageCropper = ({ newProfileImageInfo, close, handelValueChange }) => {
   const [imageURL, setImageURL] = useNewImage(newProfileImageInfo);
   const [imageCropper, setImageCropper] = useState({});
   return (
@@ -54,9 +43,12 @@ const ImageCropper = ({ newProfileImageInfo, close }) => {
             onClick={() => {
               imageCropper.getCroppedCanvas().toBlob((blob) => {
                 newProfileImageInfo.setImageBlob(blob);
-                console.log(newProfileImageInfo.getImageBlob());
                 newProfileImageInfo.updateClientImage();
-                console.log("Hello");
+                handelValueChange({
+                  eventName: "image_path",
+                  eventValue: newProfileImageInfo.getImageBlob(),
+                });
+                close();
               });
             }}
           >
